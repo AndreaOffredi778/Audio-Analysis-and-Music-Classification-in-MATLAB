@@ -1,164 +1,147 @@
-Code Description
+# Code Description
+
 The code performs analysis on audio tracks divided into three classes:
-    • Disco
-    • Metal
-    • HipHop
+
+- **Disco**
+- **Metal**
+- **HipHop**
+
 Each class is organized into two subfolders containing 6 audio files, split into training and test sets as follows:
-    • 50% of files for training (3 files)
-    • 50% of files for testing (3 files)
-Folder Structure
-    • IAM: The main file containing all operations required to address the tasks and generate the requested values or plots.
-    • function: Contains utility functions for audio feature extraction, such as MFCC (Mel Frequency Cepstral Coefficients) and CHROMA (chroma features).
-Main functions include:
-    • extract_from_path and extract_from_path_chroma: extract MFCC and CHROMA features.
-    • sigmerge, specsub: handle noise addition and spectral subtraction.
-    • add_noise_and_denoise: adds noise to the test set.
-    • code: Contains all files necessary to compute, visualize, and extract the values or plots referenced in IAM.
-Code Workflow
-File Reading:
+
+- 50% of files for training (3 files)  
+- 50% of files for testing (3 files)  
+
+---
+
+## Folder Structure
+
+- **IAM:** The main file containing all operations required to address the tasks and generate the requested values or plots.  
+- **function:** Contains utility functions for audio feature extraction, such as **MFCC** (Mel Frequency Cepstral Coefficients) and **CHROMA** (chroma features).  
+
+### Main Functions
+
+- `extract_from_path` and `extract_from_path_chroma`: extract MFCC and CHROMA features  
+- `sigmerge`, `specsub`: handle noise addition and spectral subtraction  
+- `add_noise_and_denoise`: adds noise to the test set  
+- **code:** Contains all files necessary to compute, visualize, and extract the values or plots referenced in IAM  
+
+---
+
+## Code Workflow
+
+### 1. File Reading
 The code reads paths for training and test files across all three audio classes.
-Feature Extraction:
-Using the specific functions, features (MFCC and CHROMA) are extracted for both training and test sets. Sets are normalized to ensure consistent dimensions.
-Combining Feature Sets:
-The extracted feature sets (MFCC and CHROMA) are concatenated into a single matrix called ALL, required for combined feature analysis. Features are identified as follows:
-    • CHROMA: type 1
-    • MFCC: type 2
-    • ALL (MFCC + CHROMA): type 3
-Training with k-NN (k-Nearest Neighbors):
-The k-NN algorithm classifies the test set based on the training set. Recognition rates are calculated for each feature type (MFCC, CHROMA, ALL), and corresponding plots and matrices are generated. Comparisons with Decision Tree (DT) performance are also included.
-Training with Decision Tree (DT):
-Using fitcree and predict, a decision tree is generated from the training set and labels. Matrices are also created to compare with k-NN results.
-Searching for Maximum Recognition Rate:
-For k-NN, the maximum recognition rate across different k-values is found; for DT, the maximum rate from the matrices is identified. Summary rates are printed for each k.
-Adding Noise:
-The add_noise_and_denoise function concatenates babble.wav to all test files for each class. Parameters include file paths, noise filename, SNR (set to 5), and feature type. Noisy files are saved in the noisyfile directory with subfolders per class. Spectrograms for noisy files are generated with three plots per class.
-Performance on Noisy Test Set:
-After adding noise, modified files are used to evaluate k-NN and DT performance. Features are re-extracted from noisy files, and corresponding matrices are generated for each feature type.
 
-Results from IAM.m Execution:
+### 2. Feature Extraction
+Using the specific functions, features (**MFCC** and **CHROMA**) are extracted for both training and test sets.  
+Sets are normalized to ensure consistent dimensions.
 
-extract train features for CHROMA...
-extract test features for CHROMA...
-extract train features for MFCC...
-extract test features for MFCC...
-link of MFCC + CHROMA
+### 3. Combining Feature Sets
+The extracted feature sets (**MFCC** and **CHROMA**) are concatenated into a single matrix called `ALL`, required for combined feature analysis.  
+Feature types:
 
-Set-up the kNN... number of neighbors: 1
-Recognition Rate with 1 Neighbors: 41.1015361558636
-Set-up the kNN... number of neighbors: 10
-Recognition Rate with 10 Neighbors: 43.9865118021731
-Set-up the kNN... number of neighbors: 20
-Recognition Rate with 20 Neighbors: 44.8107905582615
+- **CHROMA:** type 1  
+- **MFCC:** type 2  
+- **ALL (MFCC + CHROMA):** type 3  
 
-Recap CHROMA:
-1 -> 41.1015361558636
-10 -> 43.9865118021731
-20 -> 44.8107905582615
+### 4. Training with k-NN (k-Nearest Neighbors)
+The k-NN algorithm classifies the test set based on the training set.  
+Recognition rates are calculated for each feature type (**MFCC**, **CHROMA**, **ALL**), and corresponding plots and matrices are generated.  
+Comparisons with **Decision Tree (DT)** performance are also included.
 
-Best-performing k: 20
-Maximum recognition rate: 44.8108%
+### 5. Training with Decision Tree (DT)
+Using `fitcree` and `predict`, a decision tree is generated from the training set and labels.  
+Matrices are also created to compare with k-NN results.
 
-Set-up the kNN... number of neighbors: 1
-Recognition Rate with 1 Neighbors: 49.7564630947921
-Set-up the kNN... number of neighbors: 10
-Recognition Rate with 10 Neighbors: 53.8403896590483
-Set-up the kNN... number of neighbors: 20
-Recognition Rate with 20 Neighbors: 55.8636193330835
+### 6. Searching for Maximum Recognition Rate
+- For k-NN: the maximum recognition rate across different k-values is found.  
+- For DT: the maximum rate from the matrices is identified.  
+- Summary rates are printed for each k.
 
-Recap MFCC:
-1 -> 49.7564630947921
-10 -> 53.8403896590483
-20 -> 55.8636193330835
-Best-performing k: 20
-Maximum recognition rate: 55.8636%
+### 7. Adding Noise
+The `add_noise_and_denoise` function concatenates `babble.wav` to all test files for each class.  
 
-Set-up the kNN... number of neighbors: 1
-Recognition Rate with 1 Neighbors: 51.7047583364556
-Set-up the kNN... number of neighbors: 10
-Recognition Rate with 10 Neighbors: 54.7770700636943
-Set-up the kNN... number of neighbors: 20
-Recognition Rate with 20 Neighbors: 55.9010865492694
+Parameters:
 
-Recap CHROMA + MFCC:
-1 -> 51.7047583364556
-10 -> 54.7770700636943
-20 -> 55.9010865492694
-Best-performing k: 20
-Maximum recognition rate: 55.9011%
+- File paths  
+- Noise filename (`babble.wav`)  
+- SNR (set to 5)  
+- Feature type  
 
-CHROMA rates
-rate_knnCHROMA = 44.8108
-rate_DTCHROMA = 40.8393
+Noisy files are saved in the `noisyfile` directory with subfolders per class.  
+Spectrograms for noisy files are generated, with three plots per class.
 
-MFCC rates
-rate_knnMFCC = 55.8636
-rate_DTMFCC = 43.1622
+### 8. Performance on Noisy Test Set
+After adding noise:
 
-MFCC + CHROMA rates
-rate_knnALL = 55.9011
-rate_DTALL =42.9374
+- Modified files are used to evaluate k-NN and DT performance.  
+- Features are re-extracted from noisy files.  
+- Corresponding matrices are generated for each feature type.  
 
-Searching for optimum k-NN rate
-k-NN Maximum Recognition Rate is: 55.9010865492694
-and it is achieved with MFCC + CHROMA 20 Neighbors.
+## Recognition Rates and Noise Processing Results
 
-Searching for optimum DT rate
-DT Maximum Rate is: 43.1622330460847
-and it is achieved with MFCC 
+### MFCC and MFCC + CHROMA Rates
 
-Adding noise babble.wav to file disco.00001.wav at SNR 5...
-Saving the noisy file...
-Denoising...
-……………….
-Processing complete!
-plotting the spectrograms...
-plotting the spectrograms...
-plotting the spectrograms…
+- **MFCC**
+  - k-NN: 55.8636%
+  - Decision Tree (DT): 43.1622%
 
-extraction features of noisy train set
-link of MFCC + CHROMA
+- **MFCC + CHROMA**
+  - k-NN: 55.9011%
+  - DT: 42.9374%
 
-Set-up the kNN... number of neighbors: 1
-Recognition Rate with 1 Neighbors: 37.5421506182091
-Set-up the kNN... number of neighbors: 10
-Recognition Rate with 10 Neighbors: 40.3521918321469
-Set-up the kNN... number of neighbors: 20
-Recognition Rate with 20 Neighbors: 41.2139378044211
+**Optimum Recognition Rates**
 
-Recap CHROMA:
-1 -> 37.5421506182091
-10 -> 40.3521918321469
-20 -> 41.2139378044211
-Best-performing k: 20
-Maximum recognition rate: 41.2139%
+- k-NN Maximum: 55.9011% with MFCC + CHROMA using 20 neighbors  
+- DT Maximum: 43.1622% with MFCC
 
-Set-up the kNN... number of neighbors: 1
-Recognition Rate with 1 Neighbors: 50.1686024728363
-Set-up the kNN... number of neighbors: 10
-Recognition Rate with 10 Neighbors: 53.3907830648183
-Set-up the kNN... number of neighbors: 20
-Recognition Rate with 20 Neighbors: 53.8403896590483
+---
 
-Recap MFCC:
-1 -> 50.1686024728363
-10 -> 53.3907830648183
-20 -> 53.8403896590483
-Best-performing k: 20
-Maximum recognition rate: 53.8404%
+### Noisy Audio Processing (`babble.wav`, SNR = 5)
 
-Set-up the kNN... number of neighbors: 1
-Recognition Rate with 1 Neighbors: 52.6414387411015
-Set-up the kNN... number of neighbors: 10
-Recognition Rate with 10 Neighbors: 55.1142750093668
-Set-up the kNN... number of neighbors: 20
-Recognition Rate with 20 Neighbors: 56.4256275758711
+- Adding noise to file `disco.00001.wav`  
+- Saving noisy files and denoising  
+- Plotting spectrograms for each class  
 
-Recap CHROMA + MFCC:
-1 -> 52.6414387411015
-10 -> 55.1142750093668
-20 -> 56.4256275758711
-Best-performing k: 20
-Maximum recognition rate: 56.4256%
+**Feature extraction on noisy train set:** MFCC + CHROMA  
+
+---
+
+### k-NN Performance on Noisy Set
+
+**CHROMA Features:**
+
+| k | Recognition Rate (%) |
+|---|--------------------|
+| 1 | 37.54              |
+| 10| 40.35              |
+| 20| 41.21              |
+
+- **Best-performing k:** 20  
+- **Maximum recognition rate:** 41.21%
+
+**MFCC Features:**
+
+| k | Recognition Rate (%) |
+|---|--------------------|
+| 1 | 50.17              |
+| 10| 53.39              |
+| 20| 53.84              |
+
+- **Best-performing k:** 20  
+- **Maximum recognition rate:** 53.84%
+
+**CHROMA + MFCC Features:**
+
+| k | Recognition Rate (%) |
+|---|--------------------|
+| 1 | 52.64              |
+| 10| 55.11              |
+| 20| 56.43              |
+
+- **Best-performing k:** 20  
+- **Maximum recognition rate:** 56.43%
+
 <img width="682" height="510" alt="image" src="https://github.com/user-attachments/assets/eb269aeb-3ae8-4928-b6ab-c32e6c7acb84" />
 <img width="674" height="510" alt="image" src="https://github.com/user-attachments/assets/3cd32b88-cc62-4b50-b488-ff1919269b74" />
 <img width="681" height="506" alt="image" src="https://github.com/user-attachments/assets/5034beb2-726f-434a-8f80-8fae0470be42" />
